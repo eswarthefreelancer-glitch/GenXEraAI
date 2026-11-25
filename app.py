@@ -6,10 +6,33 @@ app = Flask(__name__)
 app.secret_key = "1234"
 
 
+# Active internship records used for student verification and authorization.
+ONGOING_INTERNSHIPS = [
+    {
+        'name': 'Tanniru mani Roopa',
+        'enrollment_no': '2303031260229',
+        'university': 'Parul University',
+        'department': 'CSE',
+        'domain': 'CYBER SECURITY',
+        'ref_no': 'GXEINT2026011',
+        'registered_for': 'Roopa',
+    },
+    {
+        'name': 'Kovvuru Hemachandra Reddy',
+        'enrollment_no': '2303031260307',
+        'university': 'Parul University',
+        'department': 'CSE',
+        'domain': 'CYBER SECURITY',
+        'ref_no': 'GXEINT2026011',
+        'registered_for': 'Reddy',
+    },
+]
+
+
 # Routes
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', ongoing_count=len(ONGOING_INTERNSHIPS))
 
 # Course Details Database - All 12 Internship Tracks
 COURSES_DB = {
@@ -401,6 +424,15 @@ COURSES_DB = {
         ]
     }
 }
+
+@app.route('/ongoing-internships')
+def ongoing_internships():
+    domains = sorted({intern['domain'] for intern in ONGOING_INTERNSHIPS})
+    return render_template(
+        'ongoing-internships.html',
+        interns=ONGOING_INTERNSHIPS,
+        domains=domains,
+    )
 
 @app.route('/course/<course>', methods=['GET'])
 def course_details(course):
